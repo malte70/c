@@ -111,7 +111,7 @@ done
 cat <<EOF
 clean:
 	@echo "[CLEAN]"
-	@rm src/*.o bin/*
+	@rm -f src/*.o bin/*
 	
 clean-all:
 	@make -s clean
