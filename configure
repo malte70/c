@@ -1,0 +1,128 @@
+#!/bin/sh
+
+cat <<EOF
+
+configure script for malte70/c
+
+EOF
+echo -n "Checking for operating system... "
+uname -o
+
+echo -n "Checking for CPU architecture... "
+uname -m
+
+echo -n "Checking for C compiler... "
+
+if which gcc &>/dev/null
+then
+	CC=$(which gcc)
+	echo $CC
+elif which cc &>/dev/null
+then
+	CC=$(which cc)
+	echo $CC
+else
+	echo "Not found!"
+	exit 1
+fi
+
+echo -n "Checking for string.h... "
+cat <<EOF >/tmp/$$_test.c
+#include <string.h>
+
+int main(){return 0;}
+EOF
+gcc -o /tmp/$$_test /tmp/$$_test.c &>/dev/null
+if [[ $? -eq 0 ]]
+then
+	rm /tmp/$$_test /tmp/$$_test.c
+	echo "Ok."
+else
+	rm /tmp/$$_test /tmp/$$_test.c
+	echo "Fail!"
+	exit 1
+fi
+
+echo -n "Checking for time.h... "
+cat <<EOF >/tmp/$$_test.c
+#include <time.h>
+
+int main(){return 0;}
+EOF
+gcc -o /tmp/$$_test /tmp/$$_test.c &>/dev/null
+if [[ $? -eq 0 ]]
+then
+	rm /tmp/$$_test /tmp/$$_test.c
+	echo "Ok."
+else
+	rm /tmp/$$_test /tmp/$$_test.c
+	echo "Fail!"
+	exit 1
+fi
+
+echo -n "Checking for sys/types.h... "
+cat <<EOF >/tmp/$$_test.c
+#include <sys/types.h>
+
+int main(){return 0;}
+EOF
+gcc -o /tmp/$$_test /tmp/$$_test.c &>/dev/null
+if [[ $? -eq 0 ]]
+then
+	rm /tmp/$$_test /tmp/$$_test.c
+	echo "Ok."
+else
+	rm /tmp/$$_test /tmp/$$_test.c
+	echo "Fail!"
+	exit 1
+fi
+
+echo -n "Checking for sys/stat.h... "
+cat <<EOF >/tmp/$$_test.c
+#include <sys/stat.h>
+
+int main(){return 0;}
+EOF
+gcc -o /tmp/$$_test /tmp/$$_test.c &>/dev/null
+if [[ $? -eq 0 ]]
+then
+	rm /tmp/$$_test /tmp/$$_test.c
+	echo "Ok."
+else
+	rm /tmp/$$_test /tmp/$$_test.c
+	echo "Fail!"
+	exit 1
+fi
+
+echo -n "Creating Makefile... "
+
+(
+echo -n "all: "
+grep : Makefile.in | cut -d: -f1 | sed 's@^@bin/@'| tr "\n" " " | sed 's/ $/\xA/'
+echo -e "\t"
+
+for f in src/*.c
+do
+	binary=bin/$(basename ${f%.*})
+	echo "$binary: $f"
+	echo -e "\t@echo \"[CC]    $f\""
+	echo -e "\t@gcc -std=c11 -D_POSIX_C_SOURCE=200809L -Wall -Wextra -pedantic-errors -march=native -O3 -o $binary $f\n\t"
+done
+cat <<EOF
+clean:
+	@echo "[CLEAN]"
+	@rm src/*.o bin/*
+	
+clean-all:
+	@make -s clean
+	@rm Makefile
+EOF
+) >Makefile
+cat <<EOF
+Done.
+
+Now run
+  make
+to compile the source code.
+
+EOF
