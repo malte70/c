@@ -1,4 +1,5 @@
-# configure.inc
+#
+# configure.inc.sh
 #
 
 c_welcome() {
@@ -10,12 +11,25 @@ EOF
 }
 
 c_check_os() {
-	echo -n "Checking for operating system... "
-	uname -o
+	# -n option for echo is not supported everywhere, but if this check succeeds, it is.
+	printf "Checking for operating system... "
+	_OS=$(uname -o 2>/dev/null || uname -s)
+	echo $_OS
+	if [[ $_OS != "GNU/Linux" ]]
+	then
+		echo "$0: Error: Unsupported operating system: $_OS!" >&2
+		exit 1
+	fi
 }
 c_check_arch() {
 	echo -n "Checking for CPU architecture... "
-	uname -m
+	_CPUTYPE=$(uname -m)
+	echo $_CPUTYPE
+	if [[ $_CPUTYPE != "x86_64" ]]
+	then
+		echo "$0: Error: Unsupported architecture: $_CPUTYPE!" >&2
+		exit 1
+	fi
 }
 
 c_check_cc() {
