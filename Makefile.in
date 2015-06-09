@@ -22,3 +22,5 @@ fork4: fork4.c
 
 Moin: Moin.S
 
+userinfo: userinfo.c
+
