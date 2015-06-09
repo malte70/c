@@ -10,7 +10,7 @@ strings: strings.c
 
 struct_date: struct_date.c
 
-type_length: type_length.c type_length_main.c
+type_length: type_length.c
 
 fork1: fork1.c
 
