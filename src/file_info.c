@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 	printf("Information for %s\n",argv[1]);
 	printf("---------------------------\n");
 	printf("File Size: \t\t%ld bytes\n",fileStat.st_size);
-	printf("Number of Links: \t%d\n",fileStat.st_nlink);
+	printf("Number of Links: \t%ld\n",fileStat.st_nlink);
 	printf("File inode: \t\t%lu\n",fileStat.st_ino);
 	
 	printf("File Permissions: \t");
