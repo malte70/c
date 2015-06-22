@@ -14,7 +14,7 @@ int main() {
 	printf("string2      = \"%s\"\n", string2);
 	
 	printf("\nRunning: strlen(string2)\n");
-	printf("strlen(string2) = %d\n", strlen(string2));
+	printf("strlen(string2) = %ld\n", strlen(string2));
 	
 	printf("\nRunning: strcmp(string2, organisation)\n");
 	printf("strcmp(string2, organisation) = %d\n", strcmp(string2, organisation));

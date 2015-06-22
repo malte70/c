@@ -7,4 +7,5 @@ bin/*
 *.o
 *.a
 *.so
+*.swp
 Makefile

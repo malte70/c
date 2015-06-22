@@ -10,7 +10,7 @@ strings: strings.c
 
 struct_date: struct_date.c
 
-type_length: type_length.c type_length_main.c
+type_length: type_length.c
 
 fork1: fork1.c
 
@@ -19,3 +19,8 @@ fork2: fork2.c
 fork3: fork3.c
 
 fork4: fork4.c
+
+Moin: Moin.S
+
+userinfo: userinfo.c
+

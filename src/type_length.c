@@ -2,11 +2,11 @@
 
 int main() {
 	printf("Length of common data types:\n");
-	printf("char\t%d B\n", sizeof(char));
-	printf("int\t%d B\n", sizeof(int));
-	printf("long\t%d B\n", sizeof(long));
-	printf("float\t%d B\n", sizeof(float));
-	printf("double\t%d B\n", sizeof(double));
+	printf("char\t%ld B\n", sizeof(char));
+	printf("int\t%ld B\n", sizeof(int));
+	printf("long\t%ld B\n", sizeof(long));
+	printf("float\t%ld B\n", sizeof(float));
+	printf("double\t%ld B\n", sizeof(double));
 	
 	return 0;
 }
