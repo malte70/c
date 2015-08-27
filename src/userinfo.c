@@ -60,6 +60,7 @@ int main(int argc, char **argv) {
 	
 	printf("User:  \t%s (%d)\n", pw_entry->pw_name,   uid);
 	printf("Group: \t%s (%d)\n", grp_entry->gr_name, pw_entry->pw_gid);
+	printf("GECOS: \t%s\n",      pw_entry->pw_gecos);
 	printf("Home:  \t%s\n",      pw_entry->pw_dir);
 	
 	return 0;
