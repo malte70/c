@@ -25,11 +25,6 @@ c_check_arch() {
 	echo -n "Checking for CPU architecture... "
 	_CPUTYPE=$(uname -m)
 	echo $_CPUTYPE
-	if [[ $_CPUTYPE != "x86_64" ]]
-	then
-		echo "$0: Error: Unsupported architecture: $_CPUTYPE!" >&2
-		exit 1
-	fi
 }
 
 c_check_cc() {
@@ -82,7 +77,7 @@ c_gen_makefile() {
 		for binary in $(grep : Makefile.in | cut -d: -f1)
 		do
 			echo -n "bin/$binary: "
-			grep "$binary:" Makefile.in | cut -d: -f2 | tr " " "\n" | sed 's@^@src/@;s@\.[cS]@\.o@g' | grep '.o$' | tr "\n" " " | sed 's/ $/\x0A/'
+			grep "$binary:" Makefile.in | cut -d: -f2 | tr " " "\n" | sed 's@^@src/@;s@\.c@\.o@g' | grep '.o$' | tr "\n" " " | sed 's/ $/\x0A/'
 			echo -e "\t@echo \"[LD]    bin/$binary\""
 			echo -n -e "\t@\$(CC) \$(CFLAGS) "
 			sources=$(grep "^$binary:" Makefile.in | cut -d: -f2)
@@ -91,11 +86,11 @@ c_gen_makefile() {
 				grep 'math.h' $f &>/dev/null && echo -n "-lm "
 			done
 			echo -n "-o bin/$binary "
-			echo $sources | tr " " "\n" | sed 's@^@src/@;s@\.[cS]@.o@g' | grep ".o$" | tr "\n" " "
+			echo $sources | tr " " "\n" | sed 's@^@src/@;s@\.c@.o@g' | grep ".o$" | tr "\n" " "
 			echo -e "\n\t"
 		done
 		
-		for f in src/*.c src/*.S
+		for f in src/*.c
 		do
 			_source=$(basename $f)
 			_object=${_source%.*}.o
