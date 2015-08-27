@@ -2,8 +2,6 @@ arguments: arguments.c arguments_test.sh
 
 file_info: file_info.c
 
-file_permissions: file_permissions.c
-
 pointer_arithmetics: pointer_arithmetics.c
 
 strings: strings.c
