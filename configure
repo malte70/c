@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 source configure.inc.sh
 
@@ -8,6 +8,7 @@ c_check_os
 c_check_arch
 CC=""
 c_check_cc
+c_check_gsed
 
 c_check_header "stdio.h"
 c_check_header "stdlib.h"
