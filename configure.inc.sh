@@ -4,6 +4,12 @@
 
 CC=
 SED=
+TMP=/tmp
+
+if [[ ! -w "$TMP" ]]
+then
+	TMP=$HOME
+fi
 
 c_welcome() {
 	cat <<EOF
@@ -65,18 +71,18 @@ c_check_gsed() {
 c_check_header() {
 	header=$1
 	printf "Checking for $header... "
-	cat <<EOF >/tmp/$$_test.c
+	cat <<EOF >$TMP/$$_test.c
 #include <$header>
 
 int main(){return 0;}
 EOF
-	$CC -o /tmp/$$_test /tmp/$$_test.c &>/dev/null
+	$CC -o $TMP/$$_test $TMP/$$_test.c &>/dev/null
 	if [[ $? -eq 0 ]]
 	then
-		rm -f /tmp/$$_test /tmp/$$_test.c
+		rm -f $TMP/$$_test $TMP/$$_test.c
 		echo "Ok."
 	else
-		rm -f /tmp/$$_test /tmp/$$_test.c
+		rm -f $TMP/$$_test $TMP/$$_test.c
 		echo "Fail!"
 		exit 1
 	fi
