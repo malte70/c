@@ -54,7 +54,9 @@ c_check_cc() {
 c_check_gsed() {
 	printf "Checking for GNU sed... "
 	
-	if sed --version 2>/dev/null | head -n1 | grep GNU &>/dev/null
+	# Busybox' sed says "This is not GNU sed version x.y", so
+	# filter for "not GNU"
+	if sed --version 2>/dev/null | head -n1 | grep -v "not GNU" | grep GNU &>/dev/null
 	then
 		SED=$(which sed)
 		echo $SED
