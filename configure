@@ -16,12 +16,14 @@ c_check_header "unistd.h"
 c_check_header "grp.h"
 c_check_header "math.h"
 c_check_header "pwd.h"
+c_check_pwd_gecos
 c_check_header "string.h"
 c_check_header "sys/stat.h"
 c_check_header "sys/types.h"
 c_check_header "sys/wait.h"
 c_check_header "time.h"
 
+c_gen_config_h
 c_gen_makefile
 cat <<EOF
 

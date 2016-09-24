@@ -5,6 +5,7 @@
 CC=
 SED=
 TMP=/tmp
+CONFIG_H_HAS_GECOS=
 
 if [[ ! -w "$TMP" ]]
 then
@@ -89,6 +90,45 @@ EOF
 		exit 1
 	fi
 }
+c_check_pwd_gecos() {
+	printf "Checking if struct passwd has pw_gecos... "
+	cat <<EOF >$TMP/$$_test.c
+#include <pwd.h>
+
+int main(){
+	struct passwd *pw;
+	pw->pw_gecos = "foo";
+	return 0;
+}
+EOF
+	$CC -o $TMP/$$_test $TMP/$$_test.c &>/dev/null
+	if [[ $? -eq 0 ]]
+	then
+		rm -f $TMP/$$_test $TMP/$$_test.c
+		echo "Ok."
+		CONFIG_H_HAS_GECOS=1
+	else
+		rm -f $TMP/$$_test $TMP/$$_test.c
+		echo "No."
+		CONFIG_H_HAS_GECOS=0
+	fi
+}
+
+c_gen_config_h() {
+	echo -n "Creating config.h... "
+	
+	(
+	echo "#ifndef CONFIG_H"
+	echo "#define CONFIG_H"
+	echo
+	if [[ $CONFIG_H_HAS_GECOS -eq 1 ]]; then
+		echo "#define PASSWD_HAS_GECOS"
+	fi
+	echo
+	echo "#endif"
+	) > src/config.h
+	echo "Done."
+}
 
 c_gen_makefile() {
 	echo -n "Creating Makefile... "
@@ -132,7 +172,7 @@ c_gen_makefile() {
 		echo '	'
 		echo 'clean-all:'
 		echo '	@make -s clean'
-		echo '	@rm Makefile'
+		echo '	@rm Makefile src/config.h'
 		echo '	'
 	) >Makefile
 	echo "Done."

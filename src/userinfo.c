@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <math.h>
+#include "config.h"
 
 void version() {
 	printf("userinfo 0.20150608\n");
@@ -60,7 +61,9 @@ int main(int argc, char **argv) {
 	
 	printf("User:  \t%s (%d)\n", pw_entry->pw_name,   uid);
 	printf("Group: \t%s (%d)\n", grp_entry->gr_name, pw_entry->pw_gid);
+#ifdef PASSWD_HAS_GECOS
 	printf("GECOS: \t%s\n",      pw_entry->pw_gecos);
+#endif
 	printf("Home:  \t%s\n",      pw_entry->pw_dir);
 	
 	return 0;
