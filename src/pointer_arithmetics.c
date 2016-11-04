@@ -1,10 +1,11 @@
 #include <stdio.h>
 int main(void) {
-	int a;
-	int *aptr;
-	char hello[] = "Hello World\n";
-	char *hptr;
-	a = 10;
+	int    a;
+	int   *aptr;
+	char   hello[] = "Hello World\n";
+	char  *hptr;
+	
+	a    = 10;
 	aptr = &a;
 	printf("a: %d\n", *aptr);
 	hptr = hello + 6;
@@ -13,5 +14,6 @@ int main(void) {
 		printf("%c ", *hptr++);
 	}
 	printf("\n");
+	
 	return 0;
 }

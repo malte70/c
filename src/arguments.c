@@ -6,5 +6,6 @@ int main(int argc, char* argv[]) {
 		/* Ausgabe zeilenweise */
 		printf("argv[%d] = %s\n", i, argv[i]);
 	}
+	
 	return 0;
 }

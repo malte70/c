@@ -24,6 +24,7 @@ char *_itoa(int n) {
 	snprintf(buf, len+1, "%d", n);
 	return   buf;
 }
+
 int is_int(const char *p) {
 	    return strcmp(_itoa(atoi(p)), p) == 0;
 }
@@ -52,6 +53,7 @@ int main(int argc, char **argv) {
 			uid = atoi(argv[1]);
 		}
 	}
+	
 	pw_entry  = getpwuid(uid);
 	if (pw_entry == NULL) {
 		fprintf(stderr, "%s: Error: User for UID=%d not found!\n", argv[0], uid);
