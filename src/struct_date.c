@@ -13,7 +13,7 @@ int main() {
 	
 	struct Datum eindatum;      /* Eine Strukturvariable vom Typ struct Datum */
 	struct Datum *einptr;       /* Ein Zeiger auf eine derartige Variable */
-	einptra        = &eindatum; /* einptr zeigt auf ein datum */
+	einptr         = &eindatum; /* einptr zeigt auf ein datum */
 	eindatum.Tag   = 6;         /* Zuweisung des Feldes Tag mit dem Wertes 6 */
 	einptr->Monat  = 12;        /* Zuweisung des Feldes Monat mit dem Wert 12
 	                               ueber den Zeiger einptr */
