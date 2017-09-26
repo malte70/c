@@ -167,12 +167,16 @@ c_gen_makefile() {
 		done
 		
 		echo 'clean:'
-		echo '	@echo "[CLEAN]"'
-		echo '	@rm -f src/*.o bin/*'
+		echo '	@echo "[CLEAN] src/*.o"'
+		echo '	@$(RM) src/*.o'
+		echo '	@echo "[CLEAN] bin/*"'
+		echo '	@$(RM) bin/*'
 		echo '	'
 		echo 'clean-all:'
 		echo '	@make -s clean'
-		echo '	@rm Makefile src/config.h'
+		echo '	@echo "[CLEAN] Makefile"'
+		echo '	@echo "[CLEAN] src/config.h"'
+		echo '	@$(RM) Makefile src/config.h'
 		echo '	'
 	) >Makefile
 	echo "Done."
