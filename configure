@@ -8,6 +8,8 @@ c_check_os
 c_check_arch
 CC=""
 c_check_cc
+CXX=""
+c_check_cxx
 c_check_gsed
 
 c_check_header "stdio.h"
@@ -22,6 +24,7 @@ c_check_header "sys/stat.h"
 c_check_header "sys/types.h"
 c_check_header "sys/wait.h"
 c_check_header "time.h"
+c_check_header_cpp "iostream"
 
 c_gen_config_h
 c_gen_makefile

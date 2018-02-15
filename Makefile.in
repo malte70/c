@@ -20,3 +20,5 @@ fork4: fork4.c
 
 userinfo: userinfo.c
 
+cpp_hello_world: cpp/hello_world.cpp cpp/greeter.h cpp/greeter.cpp
+

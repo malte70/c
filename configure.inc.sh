@@ -3,6 +3,7 @@
 #
 
 CC=
+CXX=
 SED=
 TMP=/tmp
 CONFIG_H_HAS_GECOS=
@@ -47,6 +48,26 @@ c_check_cc() {
 	then
 		CC=$(which clang)
 		echo $CC
+	else
+		echo "Not found!"
+		exit 1
+	fi
+}
+c_check_cxx() {
+	printf "Checking for C++ compiler... "
+
+	if which g++ &>/dev/null
+	then
+		CXX=$(which g++)
+		echo $CXX
+	elif which c++ &>/dev/null
+	then
+		CXX=$(which c++)
+		echo $CXX
+	elif which clang &>/dev/null
+	then
+		CXX=$(which clang)
+		echo $CXX
 	else
 		echo "Not found!"
 		exit 1
@@ -113,6 +134,25 @@ EOF
 		CONFIG_H_HAS_GECOS=0
 	fi
 }
+c_check_header_cpp() {
+	header=$1
+	printf "Checking for C++ header $header... "
+	cat <<EOF >$TMP/$$_test.cpp
+#include <$header>
+
+int main(){return 0;}
+EOF
+	$CXX -o $TMP/$$_test $TMP/$$_test.cpp &>/dev/null
+	if [[ $? -eq 0 ]]
+	then
+		rm -f $TMP/$$_test $TMP/$$_test.cpp
+		echo "Ok."
+	else
+		rm -f $TMP/$$_test $TMP/$$_test.cpp
+		echo "Fail!"
+		exit 1
+	fi
+}
 
 c_gen_config_h() {
 	echo -n "Creating config.h... "
@@ -134,8 +174,10 @@ c_gen_makefile() {
 	echo -n "Creating Makefile... "
 	
 	(
-		echo "CC=$CC"
-		echo "CFLAGS=-Wall -march=native -O3"
+		echo "CC       = $CC"
+		echo "CXX      = $CXX"
+		echo "CFLAGS   = -Wall -std=c11   -march=native -O3"
+		echo "CXXFLAGS = -Wall -std=c++11 -march=native -O3"
 		echo ""
 		echo -n "all: "
 		grep : Makefile.in | cut -d: -f1 | $SED 's@^@bin/@'| tr "\n" " " | $SED 's/ $/\xA	\x0A/'
@@ -143,16 +185,23 @@ c_gen_makefile() {
 		for binary in $(grep : Makefile.in | cut -d: -f1)
 		do
 			echo -n "bin/$binary: "
-			grep "$binary:" Makefile.in | cut -d: -f2 | tr " " "\n" | $SED 's@^@src/@;s@\.c@\.o@g' | grep '.o$' | tr "\n" " " | $SED 's/ $/\x0A/'
+			grep "$binary:" Makefile.in | cut -d: -f2 | tr " " "\n" | $SED 's@^@src/@;s@\.cpp@\.o@g;s@\.c@\.o@g' | grep '.o$' | tr "\n" " " | $SED 's/ $/\x0A/'
 			echo -e "\t@echo \"[LD]    bin/$binary\""
-			echo -n -e "\t@\$(CC) \$(CFLAGS) "
+			if grep "$binary:" Makefile.in | cut -d: -f2 | grep '\.cpp' &>/dev/null
+			then
+				# C++
+				echo -n -e "\t@\$(CXX) \$(CXXFLAGS) "
+			else
+				# C
+				echo -n -e "\t@\$(CC) \$(CFLAGS) "
+			fi
 			sources=$(grep "^$binary:" Makefile.in | cut -d: -f2)
 			for f in $(echo $sources | tr " " "\n" | grep '.c' | $SED 's@^@src/@')
 			do
 				grep 'math.h' $f &>/dev/null && echo -n "-lm "
 			done
 			echo -n "-o bin/$binary "
-			echo $sources | tr " " "\n" | $SED 's@^@src/@;s@\.c@.o@g' | grep ".o$" | tr "\n" " "
+			echo $sources | tr " " "\n" | $SED 's@^@src/@;s@\.cpp@.o@g;s@\.c@.o@g' | grep ".o$" | tr "\n" " "
 			echo -e "\n\t"
 		done
 		
@@ -165,10 +214,21 @@ c_gen_makefile() {
 			echo "	@cd src && \$(CC) \$(CFLAGS) -c $_source"
 			echo '	'
 		done
+		for f in src/cpp/*.cpp
+		do
+			_source=$(basename $f)
+			_object=${_source%.*}.o
+			echo "src/cpp/$_object: src/cpp/$_source"
+			echo "	@echo \"[CXX]   src/cpp/$_object\""
+			echo "	@cd src/cpp && \$(CXX) \$(CXXFLAGS) -c $_source"
+			echo '	'
+		done
 		
 		echo 'clean:'
 		echo '	@echo "[CLEAN] src/*.o"'
 		echo '	@$(RM) src/*.o'
+		echo '	@echo "[CLEAN] src/cpp/*.o"'
+		echo '	@$(RM) src/cpp/*.o'
 		echo '	@echo "[CLEAN] bin/*"'
 		echo '	@$(RM) bin/*'
 		echo '	'
